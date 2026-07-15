@@ -14,19 +14,23 @@ const Header = (props) => {
 }
 
 const Part = (props) => {
+  // console.log(props.parts)
   return (
-    <p>
-      {props.part} {props.exercises}
-    </p>
+    <div>
+        {props.parts.map(note =>
+          <p key={note.id}>
+            {note.name}, {note.exercises}
+          </p>
+        )}
+    </div>
   )
 }
 
 const Content = (props) => {
+  // console.log(props.parts)
   return (
     <div>
-      <Part part={props.parts[0].name} exercises={props.parts[0].exercises} />
-      <Part part={props.parts[1].name} exercises={props.parts[1].exercises} />
-      <Part part={props.parts[2].name} exercises={props.parts[2].exercises} />
+      <Part parts={props.parts} />
     </div>
     )
 }
@@ -51,6 +55,11 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4
       }
     ]
   }
