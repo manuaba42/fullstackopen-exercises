@@ -38,13 +38,18 @@ const Content = (props) => {
 
 const Total = (props) => {
   // console.log(props.parts)
-  let sum = 0
-  props.parts.map(note => {
-    sum += note.exercises
-  })
+  // let sum = 0
+  // props.parts.map(note => {
+  //   sum += note.exercises
+  // })
+
+  const totalExercises = props.parts.reduce((total, item) => {
+    return total + item.exercises;
+  }, 0);
+
   return (
     <div>
-      <b>total of {sum} exercises</b>
+      <b>total of {totalExercises} exercises</b>
     </div>
   )
 }
