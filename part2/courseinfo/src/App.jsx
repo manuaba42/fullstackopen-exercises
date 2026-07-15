@@ -3,6 +3,7 @@ const Course = (props) => {
     <div>
       <Header course={props.course.name} />
       <Content parts={props.course.parts} />
+      <Total parts={props.course.parts} />
     </div>
   )
 }
@@ -33,6 +34,19 @@ const Content = (props) => {
       <Part parts={props.parts} />
     </div>
     )
+}
+
+const Total = (props) => {
+  // console.log(props.parts)
+  let sum = 0
+  props.parts.map(note => {
+    sum += note.exercises
+  })
+  return (
+    <div>
+      <b>total of {sum} exercises</b>
+    </div>
+  )
 }
 
 
