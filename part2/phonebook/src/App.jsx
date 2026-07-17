@@ -13,7 +13,7 @@ const App = () => {
   const [newPerson, setNewPerson] = useState(persons)
 
   const hook = () => {
-    console.log('promise fulfilled')
+    // console.log('promise fulfilled')
     // const eventHandler = response => {
     //     setPersons(response.data)
     //     setNewPerson(response.data)
@@ -36,7 +36,7 @@ const App = () => {
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
+      // id: persons.length + 1,
     }
     let isInPerson = false
     // console.log(persons.includes(newName))
@@ -46,7 +46,21 @@ const App = () => {
       }
     })
     if (isInPerson) {
-      alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+        const personToUpdate = persons.find(n => n.name === newName)
+        const changedPerson = { ...personToUpdate, number: newNumber }
+
+        personService.update(personToUpdate.id, changedPerson).then(returnedPerson => {
+          const updatedPersons = persons.map(person => person.id !== personToUpdate.id ? person : returnedPerson)
+          setPersons(updatedPersons)
+          setNewPerson(updatedPersons)
+          // setNewPerson(newPerson.map(person => person.id !== personToUpdate.id ? person : returnedPerson))
+          alert(`${newName} is updated`)
+          setNewName('')
+          setNewNumber('')
+        })
+      }
+
     }
     else {
       // alert(`${newName} is added`)
