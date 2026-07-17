@@ -86,6 +86,18 @@ const App = () => {
     setNewPerson(flteredPerson)
   }
 
+  const deletePersons = (id) => {
+    // console.log(id)
+    const person = persons.find(n => n.id === id)
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      personService.deletePerson(id).then(returnedPersons => {
+        alert(`${person.name} is deleted`)
+        setPersons(persons.filter(n => n.id !== id))
+        setNewPerson(persons.filter(n => n.id !== id))
+      })}
+    console.log(person)
+    }
+
   // console.log(newPerson)
   return (
     <div>
@@ -94,7 +106,7 @@ const App = () => {
       <h3>Add a new</h3>
       <Form addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
       <h3>Numbers</h3>
-      <Persons newPerson={newPerson}/>
+      <Persons newPerson={newPerson} deletePerson={deletePersons}/>
     </div>
   )
 }
