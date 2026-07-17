@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import Form from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 
 
@@ -11,6 +12,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newPerson, setNewPerson] = useState(persons)
+  const [alertMessage, setAlertMessage] = useState({message: null, type: null})
+
 
   const hook = () => {
     // console.log('promise fulfilled')
@@ -27,7 +30,6 @@ const App = () => {
       setNewPerson(initialPersons)
     })
   }
-
   useEffect(hook, [])
 
 
@@ -54,8 +56,20 @@ const App = () => {
           const updatedPersons = persons.map(person => person.id !== personToUpdate.id ? person : returnedPerson)
           setPersons(updatedPersons)
           setNewPerson(updatedPersons)
-          // setNewPerson(newPerson.map(person => person.id !== personToUpdate.id ? person : returnedPerson))
-          alert(`${newName} is updated`)
+          setAlertMessage({message: `${newName} is updated`, type: 'success'})
+          setTimeout(() => {
+            setAlertMessage({message: null, type: null})
+          }, 5000)
+          setNewName('')
+          setNewNumber('')
+        }).catch(error => {
+          setAlertMessage({message: `Information of ${newName} has already been removed from server`, type: 'error'})
+          setTimeout(() => {
+            setAlertMessage({message: null, type: null})
+          }, 5000)
+          const updatedPersons = persons.filter(n => n.id !== personToUpdate.id)
+          setPersons(updatedPersons)
+          setNewPerson(updatedPersons)
           setNewName('')
           setNewNumber('')
         })
@@ -74,7 +88,15 @@ const App = () => {
         setNewName('')
         setNewNumber('')
         setNewPerson(persons.concat(returnedPersons))
-
+        setAlertMessage({message: `Added ${newName}`, type: 'success'})
+        setTimeout(() => {
+          setAlertMessage({message: null, type: null})
+        }, 5000)
+      }).catch(error => {
+        setAlertMessage({message: error.response.data, type: 'error'})
+        setTimeout(() => {
+          setAlertMessage({message: null, type: null})
+        }, 5000)
       })
     }
   }
@@ -100,22 +122,38 @@ const App = () => {
     setNewPerson(flteredPerson)
   }
 
+
   const deletePersons = (id) => {
     // console.log(id)
     const person = persons.find(n => n.id === id)
     if (window.confirm(`Delete ${person.name} ?`)) {
       personService.deletePerson(id).then(returnedPersons => {
-        alert(`${person.name} is deleted`)
+        // alert(`${person.name} is deleted`)
+        setAlertMessage({message: `${person.name} is deleted`, type: 'success'})
+          setTimeout(() => {
+            setAlertMessage({message: null, type: null})
+          }, 5000)
+
         setPersons(persons.filter(n => n.id !== id))
         setNewPerson(persons.filter(n => n.id !== id))
-      })}
-    console.log(person)
+      }).catch(error => {
+        setAlertMessage({message: `Information of ${person.name} has already been removed from server`, type: 'error'})
+        setTimeout(() => {
+          setAlertMessage({message: null, type: null})
+        }, 5000)
+        setPersons(persons.filter(n => n.id !== id))
+        setNewPerson(persons.filter(n => n.id !== id))
+      })
     }
+    // console.log(person)
+  }
 
-  // console.log(newPerson)
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={alertMessage.message} type={alertMessage.type} />
+      <h3>Filter</h3>
       <Filter filterChange={handleFilterChange}/>
       <h3>Add a new</h3>
       <Form addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
