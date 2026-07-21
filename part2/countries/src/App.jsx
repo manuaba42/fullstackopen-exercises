@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import countriesService from './services/countries'
 import Countries from "./components/Countries";
+// import weatherService from "./services/weather";
+
 
 const App = () => {
   const [countries, setCountries] = useState([])
