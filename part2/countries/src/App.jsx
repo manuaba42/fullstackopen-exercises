@@ -23,14 +23,17 @@ const App = () => {
     const flteredCountry = event.target.value === ''
       ? countries
       : countries.filter(country => country.name.common.toLowerCase().includes(event.target.value.toLowerCase()));
-    // console.log(flteredPerson)
-    // if (flteredCountry.length >= 10) {
-    //   alert('Too many matches, specify another filter')
-    // }
-    // else {
-    // }
+
     setNewCountries(flteredCountry)
   }
+
+  const showCountries = (name) => {
+    const country = newCountries.find(n => n.name.common === name)
+    
+    setNewCountries([country])
+    console.log(newCountries)
+  }
+
 
   return (
     <div>
@@ -46,7 +49,9 @@ const App = () => {
             <Countries newCountries={newCountries[0]} />
           ) : 
           (newCountries.map(country => (
-            <p key={country.name.common}>{country.name.common}</p>
+            // <a key={country.name.common}>
+              <p key={country.name.common}>{country.name.common} <button onClick={() => showCountries(country.name.common)}>show</button></p>  
+            // </a>
           ))
           )}
     </div>
