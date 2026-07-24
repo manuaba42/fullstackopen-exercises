@@ -50,6 +50,11 @@ app.get('/info', (req, res) => {
 //   res.send('<p>' + new Date() + '</p>');
 });
 
+app.delete('/api/persons/:id', (req, res) => {
+  const id = req.params.id;
+  persons = persons.filter(person => person.id !== id);
+  res.status(204).end();
+});
 
 const PORT = 3001;
 app.listen(PORT, () => {
