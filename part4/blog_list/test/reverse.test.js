@@ -71,3 +71,19 @@ test('when list has multiple blogs, equals the one with most likes', () => {
   const result = listHelper.favoriteBlog(blogs)
   assert.deepStrictEqual(result, blogs[2])
 })
+
+test('Author with the most blog is', () => {
+  const result = listHelper.mostBlog(blogs)
+  assert.deepStrictEqual(result, {
+      author: 'Robert C. Martin',
+      blogs: 3
+    })
+})
+
+test('Author with the most likes is', () => {
+  const result = listHelper.mostLikes(blogs)
+  assert.deepStrictEqual(result, {
+      author: 'Edsger W. Dijkstra',
+      likes: 17
+    })
+})
