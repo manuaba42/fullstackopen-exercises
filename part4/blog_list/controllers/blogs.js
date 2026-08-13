@@ -28,8 +28,22 @@ blogsRouter.get('/:id', async (request, response) => {
   }
 })
 
-blogsRouter.post('/', (request, response, next) => {
+blogsRouter.post('/', async (request, response) => {
   const body = request.body
+
+  // const newBlog = new Blog({
+  //   title: body.title,
+  //   author: body.author,
+  //   url: body.url,
+  //   likes: body.likes,
+  // })
+
+  // newBlog.save()
+  //   .then(savedBlog => {
+  //     response.json(savedBlog)
+  //   })
+  //   .catch(error => next(error))
+
 
   const newBlog = new Blog({
     title: body.title,
@@ -38,11 +52,8 @@ blogsRouter.post('/', (request, response, next) => {
     likes: body.likes,
   })
 
-  newBlog.save()
-    .then(savedBlog => {
-      response.json(savedBlog)
-    })
-    .catch(error => next(error))
+  const savedBlog = await newBlog.save()
+  response.status(201).json(savedBlog)
 })
 
 // blogsRouter.delete('/:id', (request, response, next) => {

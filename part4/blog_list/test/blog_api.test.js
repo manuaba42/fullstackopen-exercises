@@ -9,23 +9,23 @@ const Blog = require('../models/blogs')
 
 const api = supertest(app)
 
+
 beforeEach(async () => {
   await Blog.deleteMany({})
   console.log('cleared')
 
-  // helper.initialBlogs.forEach(async (blog) => {
-  //   let blogObject = new Blog(blog)
+  // helper.initialBlogs.forEach(async (selectedBlog) => {
+  //   let blogObject = new Blog(selectedBlog)
   //   await blogObject.save()
   //   console.log('saved')
   // })
-  // console.log('done')
+  for (let i of helper.initialBlogs) {
+    let blogObject = new Blog(i)
+    await blogObject.save()
+    console.log('saved')
+  }
 
-  let blogObject = new Blog(helper.initialBlogs[0])
-  await blogObject.save()
-
-  blogObject = new Blog(helper.initialBlogs[1])
-  await blogObject.save()
-
+  console.log('done')
 })
 
 
@@ -55,6 +55,30 @@ test('a specific blog can be viewed', async () => {
 
   // console.log(resultBlog)
   assert.deepStrictEqual(resultBlog.body, blogToView)
+})
+
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'async/await simplifies making async calls',
+    author: 'me',
+    url: 'http://localhost:3001/',
+    likes: 10,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+    
+  const blogsAtEnd = await helper.blogInDb()
+  // console.log('blogsAtEnd = ', blogsAtEnd.length)
+  // console.log('helper = ', helper.initialBlogs.length)
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+    
+  const contents = blogsAtEnd.map(e => e.title)
+  assert(contents.includes('async/await simplifies making async calls'))
 })
 
 after(async () => {
