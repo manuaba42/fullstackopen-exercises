@@ -116,6 +116,23 @@ test('blog without title or url is not added', async () => {
   assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length)
 })
 
+test('a specific blog can be deleted', async () => {
+  const blogsAtStart = await helper.blogInDb()
+  const blogToDelete = blogsAtStart[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await helper.blogInDb()
+
+  const ids = blogsAtEnd.map(n => n.id)
+  assert(!ids.includes(blogToDelete.id))
+
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+})
+
+
 after(async () => {
   await mongoose.connection.close()
 })

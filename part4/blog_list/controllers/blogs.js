@@ -56,33 +56,30 @@ blogsRouter.post('/', async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
-// blogsRouter.delete('/:id', (request, response, next) => {
-//   Blog.findByIdAndDelete(request.params.id)
-//     .then(() => {
-//       response.status(204).end()
-//     })
-//     .catch(error => next(error))
-// })
+blogsRouter.delete('/:id', async (request, response) => {
+  await Blog.findByIdAndDelete(request.params.id)
+  response.status(204).end()
+})
 
-// blogsRouter.put('/:id', (request, response, next) => {
-//   const { title, author, url, likes  } = request.body
+blogsRouter.put('/:id', (request, response, next) => {
+  const { title, author, url, likes  } = request.body
 
-//   Blog.findById(request.params.id)
-//     .then(selectedBlog => {
-//       if (!selectedBlog) {
-//         return response.status(404).end()
-//       }
+  Blog.findById(request.params.id)
+    .then(selectedBlog => {
+      if (!selectedBlog) {
+        return response.status(404).end()
+      }
 
-//       selectedBlog.title = title
-//       selectedBlog.author = author
-//       selectedBlog.url = url
-//       selectedBlog.likes = likes
+      selectedBlog.title = title
+      selectedBlog.author = author
+      selectedBlog.url = url
+      selectedBlog.likes = likes
 
-//       return selectedBlog.save().then((updatedBlog) => {
-//         response.json(updatedBlog)
-//       })
-//     })
-//     .catch(error => next(error))
-// })
+      return selectedBlog.save().then((updatedBlog) => {
+        response.json(updatedBlog)
+      })
+    })
+    .catch(error => next(error))
+})
 
 module.exports = blogsRouter
