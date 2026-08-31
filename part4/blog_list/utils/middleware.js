@@ -32,10 +32,10 @@ const tokenExtractor = (request, response, next) => {
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     request.token = authorization.substring(7)
-    console.log('tokenExtractor', request.token)
+    // console.log('tokenExtractor', request.token)
   } else {
     request.token = null
-    console.log('tokenExtractor', request.token)
+    // console.log('tokenExtractor', request.token)
   }
   next()
 }
