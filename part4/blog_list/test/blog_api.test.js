@@ -149,6 +149,26 @@ test('a blog can be updated', async () => {
   assert.deepStrictEqual(blogsAtEnd[0].likes, updatedBlog.likes)
 })
 
+test('fails with status code 401 Unauthorized if a token is not provided', async () => {
+  const newBlog = {
+    title: 'Unauthorized blog',
+    author: 'Anonymous',
+    url: 'http://localhost:3001/',
+    likes: 5,
+  }
+
+  const result = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(401)
+    .expect('Content-Type', /application\/json/)
+
+  assert(result.body.error.includes('token missing') || result.body.error.includes('token invalid'))
+
+  const blogsAtEnd = await helper.blogInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+})
+
 
 after(async () => {
   await mongoose.connection.close()
